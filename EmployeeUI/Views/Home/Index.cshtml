@@ -1,0 +1,36 @@
+﻿@* @{
+	ViewData["Title"] = "Employee Management";
+}
+
+<h2>Select Tenant to Get Employees</h2>
+
+<form asp-action="GetEmployee" method="post">
+	<label for="tenantId">Choose a Tenant:</label>
+	<select name="tenantId" id="tenantId">
+		@foreach (var tenant in ViewBag.Tenants as List<string>)
+		{
+			<option value="@tenant">@tenant</option>
+		}
+	</select>
+	<button type="submit">Get Employees</button>
+</form>
+*@
+@{
+    ViewData["Title"] = "Select Tenant";
+}
+
+<h2>Select Tenant</h2>
+
+<form method="post" action="@Url.Action("GetTenantDetails")">
+    <label for="tenantId">Tenant:</label>
+    <select id="tenantId" name="tenantId">
+        @foreach (var tenant in ViewBag.Tenants)
+        {
+            <option value="@tenant">@tenant</option>
+        }
+    </select>
+    <button type="submit">Get Tenant Details</button>
+</form>
+
+
+

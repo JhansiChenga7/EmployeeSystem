@@ -1,0 +1,6 @@
+@EmployeeTenantResolverService_HostAddress = http://localhost:5218
+
+GET {{EmployeeTenantResolverService_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
