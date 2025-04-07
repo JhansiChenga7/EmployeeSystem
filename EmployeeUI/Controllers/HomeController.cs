@@ -8,6 +8,7 @@ using System.Text;
 public class HomeController : Controller
 {
     private readonly HttpClient _httpClient;
+    private TenantInfo tenant;
 
     public HomeController(HttpClient httpClient)
     {
@@ -33,6 +34,7 @@ public class HomeController : Controller
         {
             var json = await response.Content.ReadAsStringAsync();
             var tenantInfo = JsonSerializer.Deserialize<TenantInfo>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            tenant = tenantInfo;
             // Pass the tenantInfo to the login page
             return View("Login", tenantInfo);
         }
@@ -59,7 +61,11 @@ public class HomeController : Controller
 
             if (tokenResponse.IsSuccessStatusCode)
             {
-                var token = JsonSerializer.Deserialize<JsonElement>(await tokenResponse.Content.ReadAsStringAsync()).GetProperty("Token").GetString();
+                //var token = JsonSerializer.Deserialize<LoginResponseDTO>(await tokenResponse.Content.ReadAsStringAsync()).GetProperty("Token").GetString();
+                var tokenResponseContent = await tokenResponse.Content.ReadAsStringAsync();
+                var loginResponse = JsonSerializer.Deserialize<LoginResponseDTO>(tokenResponseContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                var token = loginResponse.Token;
+
 
                 // Step 3.3: Get Employee details with JWT Token
                 var request2 = new HttpRequestMessage(HttpMethod.Get, $"{tenantUrl}/api/employee");
@@ -82,5 +88,11 @@ public class HomeController : Controller
         }
 
         return View("Error");
+    }
+
+
+    public class LoginResponseDTO
+    {
+        public string Token { get; set; }
     }
 }

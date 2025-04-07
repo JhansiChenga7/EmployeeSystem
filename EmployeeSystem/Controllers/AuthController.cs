@@ -27,7 +27,10 @@ public class AuthController : ControllerBase
 			};
 
 			var token = tokenHandler.CreateToken(tokenDescriptor);
-			return Ok(tokenHandler.WriteToken(token));
+			var written = tokenHandler.WriteToken(token);
+
+			var response = new LoginResponseDTO { Token = written };
+			return Ok(response);
 
 		}
 
@@ -39,4 +42,9 @@ public class LoginModel
 {
 	public string Username { get; set; }
 	public string Password { get; set; }
+}
+
+public class LoginResponseDTO
+{
+	public string Token { get; set; }
 }
